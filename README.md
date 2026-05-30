@@ -23,7 +23,7 @@ Ikuti urutan instruksi di bawah ini secara berurutan untuk memasang aplikasi di 
 ### 1. Kloning Repositori
 Buka terminal jalankan perintah berikut untuk mengunduh proyek ke perangkat Anda:
 ```bash
-git clone [https://github.com/username/saw-paud-ci3.git](https://github.com/username/saw-paud-ci3.git)
+git clone https://github.com/username/saw-paud-ci3.git
 cd saw-paud-ci3
 ```
 
