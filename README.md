@@ -134,7 +134,7 @@ saw-paud-ci3/
 │   │   └── Export_pdf.php  # Custom wrapper driver Dompdf untuk streaming RAM ke file PDF
 │   └── views/              # UI Render Layer (TailwindCSS + Material Symbols)
 │       ├── components/     # Reusable partials (Sidebar, Alerts, PDF Templates)
-│       ├── layouts/        # Struktur global layout Cara 1 (Header & Footer)
+│       ├── layouts/        # Struktur global layout (Header & Footer)
 │       └── pages/          # Content views masing-masing modul utama
 ├── vendor/                 # Pustaka third-party otomatis dikelola oleh Composer (Ignored)
 └── .gitignore              # Proteksi Git track dari file database lokal, vendor, & log sampah
