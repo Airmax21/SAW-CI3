@@ -1,6 +1,6 @@
 # 🏫 Sistem Pendukung Keputusan (SPK) Evaluasi Siswa PAUD - Metode SAW
 
-Aplikasi Sistem Pendukung Keputusan (SPK) berbasis web untuk melakukan evaluasi tingkat perkembangan anak usia dini di **PAUD Betlehem Tebedak**. Sistem ini dikembangkan menggunakan **CodeIgniter 3** dengan arsitektur **Clean Model Layer** dan menggunakan database **SQLite3** untuk performa pembacaan data yang instan, ringan, dan efisien.
+Aplikasi Sistem Pendukung Keputusan (SPK) berbasis web untuk melakukan evaluasi tingkat perkembangan anak usia dini di **PAUD Mekar Sari**. Sistem ini dikembangkan menggunakan **CodeIgniter 3** dengan arsitektur **Clean Model Layer** dan menggunakan database **SQLite3** untuk performa pembacaan data yang instan, ringan, dan efisien.
 
 Perhitungan perangkingan akhir semester dilakukan secara matematis menggunakan metode **Simple Additive Weighting (SAW)** berdasarkan kriteria penilaian perkembangan anak.
 

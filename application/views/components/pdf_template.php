@@ -83,7 +83,7 @@
 
     <div class="header">
         <h2>Laporan Hasil Akhir Perangkingan Siswa</h2>
-        <p>PAUD Betlehem Tebedak - Metode Simple Additive Weighting (SAW)</p>
+        <p>PAUD Mekar Sari - Metode Simple Additive Weighting (SAW)</p>
     </div>
 
     <table class="meta">
