@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Login' ?> | SAW PAUD</title>
+    <link rel="icon" href="<?= base_url('assets/images/logo.png') ?>" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..40,100..700,0..1,-50..200" />
     <script>
@@ -34,7 +35,7 @@
 
         <div class="text-center mb-8">
             <div class="w-16 h-16 bg-primary-fixed text-primary rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <span class="material-symbols-outlined text-3xl font-bold" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                <img src="<?php echo base_url('assets/images/logo.png'); ?>" alt="Logo PAUD">
             </div>
             <h2 class="text-2xl font-black text-on-surface tracking-tight mb-1">Sistem Evaluasi PAUD</h2>
             <p class="text-sm font-medium text-outline">Masuk sebagai Guru untuk mengelola penilaian SAW.</p>

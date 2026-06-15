@@ -1,6 +1,6 @@
 <nav class="hidden md:flex flex-col h-full py-8 gap-4 bg-white dark:bg-gray-900 font-DM_SANS font-medium text-base h-screen w-64 rounded-r-[40px] sticky left-0 top-0 border-r-2 border-purple-100 dark:border-gray-800 shadow-[10px_0_30px_rgba(124,82,170,0.05)] z-40">
     <div class="px-8 mb-8 flex items-center gap-4">
-        <img alt="School Logo" class="w-12 h-12 rounded-xl object-cover" data-alt="A stylized, colorful logo for a preschool named 'PAUD Mekar Sari'. It features playful, bubbly shapes in hot pink, purple, and sky blue. The design is modern, vector-style, and joyful, fitting a candy-colored aesthetic. Soft, clean lines, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn_hE1Sy4CPBrzb-llXGuIifd-QjX_oGcE_24TJQA0MywbBhpEU_kgRxytliSN7iEZWnmNRLT1a3dffKRqfK2kAoNyPo5kadiUNmHFPgEZQIUKekR1r_StvXYZGIFWeV6w7ITz69rEE_cL5fVJuc7VN_A7zF6q_0IOpcsMVg1wYrKxmi-zXhCtilr5P_e8kqOHvcBU4VIvLR_n_V8VZPGB3bxnRSDBsKL33pTpb0FxU0pu-EALkYP8BucuxYByIA1I9RFBDUjiPrnc" />
+        <img alt="Logo Paud" class="w-12 h-12 rounded-xl object-cover" src="<?php echo base_url('assets/images/logo.png'); ?>"/>
         <div>
             <h1 class="text-xl font-black text-[#7c52aa] font-headline tracking-tight leading-tight">SAW Dashboard</h1>
             <p class="text-sm text-outline font-medium">PAUD Mekar Sari</p>
