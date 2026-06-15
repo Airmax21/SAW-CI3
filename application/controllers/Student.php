@@ -148,7 +148,7 @@ class Student extends MY_Controller
                 'class_id'  => (int) $this->input->post('class_id', TRUE)
             );
 
-            if ($this->m_student->update($id, $payload)) {
+            if ($this->m_student->update_student($id, $payload)) {
                 $this->session->set_flashdata('success', 'Data siswa berhasil diperbarui.');
             } else {
                 $this->session->set_flashdata('errors', array('Gagal memperbarui data siswa.'));
@@ -167,7 +167,7 @@ class Student extends MY_Controller
     {
         $id = (int) $id;
 
-        if ($this->m_student->delete($id)) {
+        if ($this->m_student->delete_student($id)) {
             $this->session->set_flashdata('success', 'Data siswa berhasil dihapus.');
         } else {
             $this->session->set_flashdata('errors', array('Gagal menghapus data siswa.'));

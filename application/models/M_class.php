@@ -24,6 +24,17 @@ class M_class extends CI_Model {
     }
 
     /**
+     * Mengambil satu data kelas berdasarkan ID
+     * @param int $id
+     * @return object|null Single stdClass Object
+     */
+    public function get_by_id($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->get($this->table)->row();
+    }
+
+    /**
      * Rangkuman dari: CreateClassesService
      * Menyimpan data kelas baru ke database
      * Menangani pemfilteran field secara manual menggantikan Entity di CI4

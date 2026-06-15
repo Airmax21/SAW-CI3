@@ -158,13 +158,13 @@ class Teacher extends MY_Controller
                 'name'     => $this->input->post('name', TRUE)
             );
 
-            // Jika input password diisi, perbarui enkripsinya. Jika kosong, biarkan password lama.
+            // Jika input password diisi, kirim password raw ke model agar di-hash di model (mencegah double-hashing).
             $password_input = $this->input->post('password');
             if (!empty($password_input)) {
-                $payload['password'] = password_hash($password_input, PASSWORD_BCRYPT);
+                $payload['password'] = $password_input;
             }
 
-            if ($this->m_teacher->update($id, $payload)) {
+            if ($this->m_teacher->update_teacher($id, $payload)) {
                 $this->session->set_flashdata('success', 'Data guru berhasil diperbarui.');
             } else {
                 $this->session->set_flashdata('errors', array('Gagal memperbarui data guru.'));
@@ -192,7 +192,7 @@ class Teacher extends MY_Controller
             return;
         }
 
-        if ($this->m_teacher->delete($id)) {
+        if ($this->m_teacher->delete_teacher($id)) {
             $this->session->set_flashdata('success', 'Data guru berhasil dihapus dari sistem.');
         } else {
             $this->session->set_flashdata('errors', array('Gagal menghapus data guru.'));
