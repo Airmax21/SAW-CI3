@@ -17,6 +17,7 @@
                 <tr class="bg-surface-container-low/50">
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Informasi Guru</th>
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Username</th>
+                    <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Kelas Diajar</th>
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Tanggal Terdaftar</th>
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant text-right">Aksi</th>
                 </tr>
@@ -36,20 +37,24 @@
                                 <div>
                                     <p class="font-bold text-on-background text-lg leading-tight"><?= html_escape($t->name) ?></p>
                                     <p class="text-[10px] font-black text-outline uppercase tracking-wider mt-1">
-                                        <?= $active_teacher_id === (int)$t->id ? 'Akun Anda Saat Ini' : 'Staf Pengajar' ?>
+                                        Peran: <span class="text-primary font-bold"><?= $t->role === 'admin' ? 'Admin' : 'Guru' ?></span>
+                                        <?= $active_teacher_id === (int)$t->id ? ' • (Akun Anda)' : '' ?>
                                     </p>
                                 </div>
                             </div>
                         </td>
                         <td class="p-6 font-bold text-on-surface-variant text-sm">@<?= html_escape($t->username) ?></td>
+                        <td class="p-6 font-bold text-on-surface-variant text-sm">
+                            <?= $t->role === 'admin' ? '<span class="text-outline font-normal">-</span>' : ($t->class_name ? html_escape($t->class_name) : '<span class="text-red-500 font-normal">Belum ditentukan</span>') ?>
+                        </td>
                         <td class="p-6 text-outline font-medium text-sm"><?= date('d M Y, H:i', strtotime($t->created_at)) ?></td>
                         <td class="p-6 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <button onclick="openEditModal(<?= $t->id ?>, '<?= html_escape($t->name) ?>', '<?= html_escape($t->username) ?>')" class="text-tertiary hover:bg-tertiary-fixed p-2.5 rounded-full transition-colors" title="Edit Data">
+                                <button onclick="openEditModal(<?= $t->id ?>, '<?= html_escape(addslashes($t->name)) ?>', '<?= html_escape(addslashes($t->username)) ?>', '<?= $t->role ?>', '<?= $t->class_id ?>')" class="text-tertiary hover:bg-tertiary-fixed p-2.5 rounded-full transition-colors" title="Edit Data">
                                     <span class="material-symbols-outlined text-xl">edit</span>
                                 </button>
                                 <?php if ($active_teacher_id !== (int)$t->id): ?>
-                                    <button onclick="openDeleteModal(<?= $t->id ?>, '<?= html_escape($t->name) ?>')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-full transition-colors" title="Hapus Akses">
+                                    <button onclick="openDeleteModal(<?= $t->id ?>, '<?= html_escape(addslashes($t->name)) ?>')" class="text-red-500 hover:bg-red-50 p-2.5 rounded-full transition-colors" title="Hapus Akses">
                                         <span class="material-symbols-outlined text-xl">delete</span>
                                     </button>
                                 <?php endif; ?>
@@ -89,6 +94,26 @@
                 <input type="password" name="password" id="formPassword" placeholder="Masukkan password"
                     class="w-full px-5 py-3.5 bg-surface-container-low border-2 border-transparent rounded-2xl font-bold text-sm text-on-surface focus:border-primary-fixed focus:bg-white transition-all outline-none">
                 <p id="passwordHelp" class="text-[10px] text-outline font-medium pl-2 hidden">Biarkan kosong jika tidak ingin mengubah password lama.</p>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-xs font-black uppercase tracking-widest text-on-surface-variant pl-2">Peran (Role)</label>
+                <select name="role" id="formRole" required onchange="toggleFormClass()"
+                    class="w-full px-5 py-3.5 bg-surface-container-low border-2 border-transparent rounded-2xl font-bold text-sm text-on-surface focus:border-primary-fixed focus:bg-white transition-all outline-none">
+                    <option value="guru">Guru</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+
+            <div class="space-y-1.5" id="classSelectContainer">
+                <label class="text-xs font-black uppercase tracking-widest text-on-surface-variant pl-2">Kelas yang Diajar</label>
+                <select name="class_id" id="formClassId"
+                    class="w-full px-5 py-3.5 bg-surface-container-low border-2 border-transparent rounded-2xl font-bold text-sm text-on-surface focus:border-primary-fixed focus:bg-white transition-all outline-none">
+                    <option value="">Pilih Kelas...</option>
+                    <?php foreach ($classes as $c): ?>
+                        <option value="<?= $c->id ?>"><?= html_escape($c->class_name) ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div class="flex justify-end gap-3 pt-4">
@@ -139,21 +164,41 @@
         form.action = "<?= base_url('teacher/store') ?>";
         formName.value = "";
         formUsername.value = "";
+        document.getElementById('formRole').value = "guru";
+        document.getElementById('formClassId').value = "";
         formPassword.value = "";
         formPassword.required = true;
         passwordHelp.classList.add('hidden');
+        toggleFormClass();
         modal.classList.remove('hidden');
     }
 
-    function openEditModal(id, name, username) {
+    function openEditModal(id, name, username, role, class_id) {
         modalTitle.textContent = "Edit Data Guru";
         form.action = "<?= base_url('teacher/update') ?>/" + id;
         formName.value = name;
         formUsername.value = username;
+        document.getElementById('formRole').value = role;
+        document.getElementById('formClassId').value = class_id || "";
         formPassword.value = "";
         formPassword.required = false;
         passwordHelp.classList.remove('hidden');
+        toggleFormClass();
         modal.classList.remove('hidden');
+    }
+
+    function toggleFormClass() {
+        const role = document.getElementById('formRole').value;
+        const container = document.getElementById('classSelectContainer');
+        const classSelect = document.getElementById('formClassId');
+        if (role === 'admin') {
+            container.classList.add('hidden');
+            classSelect.required = false;
+            classSelect.value = "";
+        } else {
+            container.classList.remove('hidden');
+            classSelect.required = true;
+        }
     }
 
     function closeModal() {

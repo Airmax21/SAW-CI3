@@ -11,8 +11,16 @@ class Teacher extends MY_Controller
     {
         parent::__construct();
 
+        // Hak akses: Hanya Admin yang bisa mengelola data guru
+        if ($this->session->userdata('role') !== 'admin') {
+            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses ke halaman manajemen guru.'));
+            redirect('dashboard');
+            return;
+        }
+
         // Memuat model guru terisolasi
         $this->load->model('m_teacher');
+        $this->load->model('m_class');
 
         // Memuat library penunjang validasi input form
         $this->load->library('form_validation');
@@ -26,7 +34,8 @@ class Teacher extends MY_Controller
     {
         $data = array(
             'title'    => 'Manajemen Guru',
-            'teachers' => $this->m_teacher->get_all()
+            'teachers' => $this->m_teacher->get_all(),
+            'classes'  => $this->m_class->get_all()
         );
 
         // Render halaman menggunakan tumpukan Cara 1
@@ -70,6 +79,23 @@ class Teacher extends MY_Controller
                     'required'   => '%s wajib diisi.',
                     'min_length' => '%s minimal harus berisi %s karakter.'
                 )
+            ),
+            array(
+                'field'  => 'role',
+                'label'  => 'Peran (Role)',
+                'rules'  => 'required|in_list[admin,guru]',
+                'errors' => array(
+                    'required' => '%s wajib dipilih.',
+                    'in_list'  => '%s harus berupa admin atau guru.'
+                )
+            ),
+            array(
+                'field'  => 'class_id',
+                'label'  => 'Kelas',
+                'rules'  => 'callback_check_class_required_for_guru',
+                'errors' => array(
+                    'check_class_required_for_guru' => '%s wajib dipilih jika peran adalah Guru.'
+                )
             )
         );
 
@@ -83,7 +109,9 @@ class Teacher extends MY_Controller
             $payload = array(
                 'username' => $this->input->post('username', TRUE),
                 'name'     => $this->input->post('name', TRUE),
-                'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT) // Enkripsi aman berperforma tinggi
+                'password' => $this->input->post('password'), // dikirim mentah agar di-hash di model
+                'role'     => $this->input->post('role', TRUE),
+                'class_id' => $this->input->post('class_id', TRUE)
             );
 
             if ($this->m_teacher->create($payload)) {
@@ -144,6 +172,23 @@ class Teacher extends MY_Controller
                 'errors' => array(
                     'min_length' => '%s minimal harus berisi %s karakter.'
                 )
+            ),
+            array(
+                'field'  => 'role',
+                'label'  => 'Peran (Role)',
+                'rules'  => 'required|in_list[admin,guru]',
+                'errors' => array(
+                    'required' => '%s wajib dipilih.',
+                    'in_list'  => '%s harus berupa admin atau guru.'
+                )
+            ),
+            array(
+                'field'  => 'class_id',
+                'label'  => 'Kelas',
+                'rules'  => 'callback_check_class_required_for_guru',
+                'errors' => array(
+                    'check_class_required_for_guru' => '%s wajib dipilih jika peran adalah Guru.'
+                )
             )
         );
 
@@ -155,7 +200,9 @@ class Teacher extends MY_Controller
         } else {
             $payload = array(
                 'username' => $username,
-                'name'     => $this->input->post('name', TRUE)
+                'name'     => $this->input->post('name', TRUE),
+                'role'     => $this->input->post('role', TRUE),
+                'class_id' => $this->input->post('class_id', TRUE)
             );
 
             // Jika input password diisi, kirim password raw ke model agar di-hash di model (mencegah double-hashing).
@@ -172,6 +219,18 @@ class Teacher extends MY_Controller
 
             redirect('teacher');
         }
+    }
+
+    /**
+     * Callback custom untuk memvalidasi bahwa Guru wajib memilih kelas
+     */
+    public function check_class_required_for_guru($class_id)
+    {
+        $role = $this->input->post('role');
+        if ($role === 'guru' && empty($class_id)) {
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**

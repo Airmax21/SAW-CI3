@@ -50,7 +50,9 @@ class Auth extends CI_Controller
                 'is_logged_in' => TRUE,
                 'teacher_id'   => $teacher->id,
                 'teacher_name' => $teacher->name,
-                'username'     => $teacher->username
+                'username'     => $teacher->username,
+                'role'         => $teacher->role,
+                'class_id'     => $teacher->class_id
             );
             $this->session->set_userdata($session_data);
 

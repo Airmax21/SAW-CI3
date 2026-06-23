@@ -13,7 +13,7 @@ class MY_Controller extends CI_Controller
         $this->load->helper('url');
 
         // Logic Filter Jalur Autentikasi (Pengganti Filter Auth CI4)
-        if ($this->session->userdata('is_logged_in') !== TRUE) {
+        if (!is_cli() && $this->session->userdata('is_logged_in') !== TRUE) {
             // Jika belum login, tendang balik ke halaman login
             redirect('auth/login');
         }

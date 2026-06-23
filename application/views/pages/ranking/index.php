@@ -40,7 +40,7 @@
         </form>
 
         <!-- Tombol Aksi Ekspor & Cetak (Mengarahkan ke rute endpoint controller Ranking CI3) -->
-        <a href="<?= base_url('ranking/exportPdf?class_id=' . $selected_class_id . '&period=' . $selected_period) ?>"
+        <a href="<?= site_url('ranking/exportPdf?class_id=' . $selected_class_id . '&period=' . $selected_period) ?>"
             class="px-4 py-2 rounded-full bg-surface-container-high text-secondary font-bold hover:bg-secondary-container hover:scale-105 transition-all ease-out duration-300 flex items-center gap-1.5 text-xs shrink-0 decoration-none">
             <span class="material-symbols-outlined text-sm">download</span> Ekspor PDF
         </a>

@@ -65,21 +65,24 @@
             <span>Ranking</span>
         </a>
 
-        <!-- Guru / Pengguna -->
-        <?php $is_teacher = ($current_segment === 'teacher'); ?>
-        <a class="flex items-center gap-4 px-4 py-3 rounded-full mx-2 transition-all duration-200 <?= $is_teacher ? $activeClass : $inactiveClass ?>"
-            href="<?= base_url('teacher') ?>">
-            <span class="material-symbols-outlined" style="<?= $is_teacher ? "font-variation-settings: 'FILL' 1;" : "" ?>">manage_accounts</span>
-            <span>Guru</span>
-        </a>
+        <!-- Guru / Pengguna (Hanya muncul jika Role = admin) -->
+        <?php if ($this->session->userdata('role') === 'admin'): ?>
+            <?php $is_teacher = ($current_segment === 'teacher'); ?>
+            <a class="flex items-center gap-4 px-4 py-3 rounded-full mx-2 transition-all duration-200 <?= $is_teacher ? $activeClass : $inactiveClass ?>"
+                href="<?= base_url('teacher') ?>">
+                <span class="material-symbols-outlined" style="<?= $is_teacher ? "font-variation-settings: 'FILL' 1;" : "" ?>">manage_accounts</span>
+                <span>Guru</span>
+            </a>
+        <?php endif; ?>
     </div>
-
+ 
     <!-- Bagian Info User Login & Logout -->
     <div class="px-4 border-t border-purple-50 dark:border-gray-800 pt-5 space-y-4">
         <?php
         // Mengambil data guru dari native session userdata CI3
         $teacher_name = $this->session->userdata('teacher_name');
         $username     = $this->session->userdata('username');
+        $role         = $this->session->userdata('role');
         ?>
         <!-- Info Profil Guru -->
         <div class="flex items-center gap-3 px-4 py-1">
@@ -88,7 +91,7 @@
             </div>
             <div class="min-w-0 flex-1">
                 <p class="font-bold text-gray-800 dark:text-gray-200 text-sm truncate leading-tight"><?= $teacher_name ? html_escape($teacher_name) : 'Guru PAUD' ?></p>
-                <p class="text-xs text-outline font-medium mt-0.5 truncate">@<?= $username ? html_escape($username) : 'teacher' ?></p>
+                <p class="text-xs text-outline font-medium mt-0.5 truncate">@<?= $username ? html_escape($username) : 'teacher' ?> (<?= $role === 'admin' ? 'Admin' : 'Guru' ?>)</p>
             </div>
         </div>
 

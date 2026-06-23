@@ -14,8 +14,11 @@ class M_teacher extends CI_Model
 
     public function get_all()
     {
-        $this->db->order_by('name', 'ASC');
-        return $this->db->get($this->table)->result();
+        $this->db->select('teachers.*, classes.class_name');
+        $this->db->from($this->table);
+        $this->db->join('classes', 'classes.id = teachers.class_id', 'left');
+        $this->db->order_by('teachers.name', 'ASC');
+        return $this->db->get()->result();
     }
 
     public function get_by_id($id)
@@ -30,6 +33,8 @@ class M_teacher extends CI_Model
             'username'   => isset($data['username']) ? $data['username'] : null,
             'name'       => isset($data['name']) ? $data['name'] : null,
             'password'   => isset($data['password']) ? password_hash($data['password'], PASSWORD_BCRYPT) : null,
+            'role'       => isset($data['role']) ? $data['role'] : 'guru',
+            'class_id'   => (isset($data['role']) && $data['role'] === 'guru' && !empty($data['class_id'])) ? (int)$data['class_id'] : null,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         );
@@ -44,6 +49,8 @@ class M_teacher extends CI_Model
         $payload = array(
             'username'   => isset($data['username']) ? $data['username'] : $teacher->username,
             'name'       => isset($data['name']) ? $data['name'] : $teacher->name,
+            'role'       => isset($data['role']) ? $data['role'] : $teacher->role,
+            'class_id'   => (isset($data['role']) && $data['role'] === 'guru') ? (!empty($data['class_id']) ? (int)$data['class_id'] : null) : null,
             'updated_at' => date('Y-m-d H:i:s')
         );
 
