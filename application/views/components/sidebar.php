@@ -72,19 +72,13 @@
             <span>Ranking</span>
         </a>
 
-        <!-- Data Pribadi -->
-        <a class="flex items-center gap-4 px-4 py-3 rounded-full mx-2 transition-all duration-200 <?= $is_profile ? $activeClass : $inactiveClass ?>"
-            href="<?= base_url('profile') ?>">
-            <span class="material-symbols-outlined" style="<?= $is_profile ? "font-variation-settings: 'FILL' 1;" : "" ?>">person</span>
-            <span>Data Pribadi</span>
-        </a>
 
-        <!-- Guru / Pengguna (Hanya muncul jika Role = admin) -->
+        <!-- Akun (Hanya muncul jika Role = admin) -->
         <?php if ($is_admin): ?>
             <a class="flex items-center gap-4 px-4 py-3 rounded-full mx-2 transition-all duration-200 <?= $is_teacher ? $activeClass : $inactiveClass ?>"
                 href="<?= base_url('teacher') ?>">
                 <span class="material-symbols-outlined" style="<?= $is_teacher ? "font-variation-settings: 'FILL' 1;" : "" ?>">manage_accounts</span>
-                <span>Guru</span>
+                <span>Akun</span>
             </a>
         <?php endif; ?>
     </div>
@@ -97,16 +91,17 @@
         $username     = $this->session->userdata('username');
         $role         = $this->session->userdata('role');
         ?>
-        <!-- Info Profil Guru -->
-        <div class="flex items-center gap-3 px-4 py-1">
-            <div class="w-10 h-10 bg-purple-100 dark:bg-purple-950 text-[#7c52aa] rounded-xl flex items-center justify-center font-black text-sm shadow-inner shrink-0">
+        <!-- Info Profil Akun (Link ke Data Pribadi) -->
+        <?php $profileActive = $is_profile ? 'bg-purple-100 dark:bg-purple-900/40 border border-primary/30 shadow-sm' : 'border border-transparent'; ?>
+        <a href="<?= base_url('profile') ?>" class="flex items-center gap-3 px-4 py-2.5 rounded-2xl hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200 group <?= $profileActive ?>">
+            <div class="w-10 h-10 bg-purple-100 dark:bg-purple-950 text-[#7c52aa] rounded-xl flex items-center justify-center font-black text-sm shadow-inner shrink-0 group-hover:scale-105 transition-transform">
                 <?= strtoupper(substr($teacher_name ? $teacher_name : 'G', 0, 2)) ?>
             </div>
             <div class="min-w-0 flex-1">
-                <p class="font-bold text-gray-800 dark:text-gray-200 text-sm truncate leading-tight"><?= $teacher_name ? html_escape($teacher_name) : 'Guru PAUD' ?></p>
+                <p class="font-bold text-gray-800 dark:text-gray-200 text-sm truncate leading-tight group-hover:text-primary transition-colors"><?= $teacher_name ? html_escape($teacher_name) : 'Guru PAUD' ?></p>
                 <p class="text-xs text-outline font-medium mt-0.5 truncate">@<?= $username ? html_escape($username) : 'teacher' ?> (<?= $role === 'admin' ? 'Admin' : 'Guru' ?>)</p>
             </div>
-        </div>
+        </a>
 
         <!-- Button Logout (Diarahkan ke endpoint logout controller auth CI3) -->
         <a class="flex items-center gap-4 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-full mx-2 transition-all hover:translate-x-2 duration-200 font-bold text-sm"
@@ -186,34 +181,29 @@
                 <span>Ranking</span>
             </a>
 
-            <!-- Data Pribadi -->
-            <a class="flex items-center gap-4 px-4 py-3 rounded-full mx-2 transition-all duration-200 <?= $is_profile ? $activeClass : $inactiveClass ?>"
-                href="<?= base_url('profile') ?>">
-                <span class="material-symbols-outlined" style="<?= $is_profile ? "font-variation-settings: 'FILL' 1;" : "" ?>">person</span>
-                <span>Data Pribadi</span>
-            </a>
 
-            <!-- Guru / Pengguna -->
+            <!-- Akun (Hanya muncul jika Role = admin) -->
             <?php if ($is_admin): ?>
                 <a class="flex items-center gap-4 px-4 py-3 rounded-full mx-2 transition-all duration-200 <?= $is_teacher ? $activeClass : $inactiveClass ?>"
                     href="<?= base_url('teacher') ?>">
                     <span class="material-symbols-outlined" style="<?= $is_teacher ? "font-variation-settings: 'FILL' 1;" : "" ?>">manage_accounts</span>
-                    <span>Guru</span>
+                    <span>Akun</span>
                 </a>
             <?php endif; ?>
         </div>
 
         <div class="px-6 border-t border-purple-50 dark:border-gray-800 pt-5 space-y-4">
-            <!-- Info Profil Guru -->
-            <div class="flex items-center gap-3 px-2 py-1">
-                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-950 text-[#7c52aa] rounded-xl flex items-center justify-center font-black text-sm shadow-inner shrink-0">
+            <!-- Info Profil Akun (Link ke Data Pribadi) -->
+            <?php $profileActiveMobile = $is_profile ? 'bg-purple-100 dark:bg-purple-900/40 border border-primary/30 shadow-sm' : 'border border-transparent'; ?>
+            <a href="<?= base_url('profile') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-2xl hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200 group w-full <?= $profileActiveMobile ?>">
+                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-950 text-[#7c52aa] rounded-xl flex items-center justify-center font-black text-sm shadow-inner shrink-0 group-hover:scale-105 transition-transform">
                     <?= strtoupper(substr($teacher_name ? $teacher_name : 'G', 0, 2)) ?>
                 </div>
                 <div class="min-w-0 flex-1">
-                    <p class="font-bold text-gray-800 dark:text-gray-200 text-sm truncate leading-tight"><?= $teacher_name ? html_escape($teacher_name) : 'Guru PAUD' ?></p>
+                    <p class="font-bold text-gray-800 dark:text-gray-200 text-sm truncate leading-tight group-hover:text-primary transition-colors"><?= $teacher_name ? html_escape($teacher_name) : 'Guru PAUD' ?></p>
                     <p class="text-xs text-outline font-medium mt-0.5 truncate">@<?= $username ? html_escape($username) : 'teacher' ?> (<?= $role === 'admin' ? 'Admin' : 'Guru' ?>)</p>
                 </div>
-            </div>
+            </a>
 
             <!-- Button Logout -->
             <a class="flex items-center gap-4 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-full mx-2 transition-all duration-200 font-bold text-sm"

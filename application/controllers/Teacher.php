@@ -11,9 +11,9 @@ class Teacher extends MY_Controller
     {
         parent::__construct();
 
-        // Hak akses: Hanya Admin yang bisa mengelola data guru
+        // Hak akses: Hanya Admin yang bisa mengelola data akun
         if ($this->session->userdata('role') !== 'admin') {
-            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses ke halaman manajemen guru.'));
+            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses ke halaman manajemen akun.'));
             redirect('dashboard');
             return;
         }
@@ -33,7 +33,7 @@ class Teacher extends MY_Controller
     public function index()
     {
         $data = array(
-            'title'    => 'Manajemen Guru',
+            'title'    => 'Manajemen Akun',
             'teachers' => $this->m_teacher->get_all(),
             'classes'  => $this->m_class->get_all()
         );
@@ -59,7 +59,7 @@ class Teacher extends MY_Controller
                     'required'      => '%s wajib diisi.',
                     'alpha_numeric' => '%s hanya boleh berisi huruf dan angka.',
                     'min_length'    => '%s minimal berisi %s karakter.',
-                    'is_unique'     => '%s sudah digunakan oleh guru lain.'
+                    'is_unique'     => '%s sudah digunakan oleh akun lain.'
                 )
             ),
             array(
@@ -115,9 +115,9 @@ class Teacher extends MY_Controller
             );
 
             if ($this->m_teacher->create($payload)) {
-                $this->session->set_flashdata('success', 'Data guru berhasil ditambahkan.');
+                $this->session->set_flashdata('success', 'Data akun berhasil ditambahkan.');
             } else {
-                $this->session->set_flashdata('errors', array('Gagal menyimpan data guru baru.'));
+                $this->session->set_flashdata('errors', array('Gagal menyimpan data akun baru.'));
             }
 
             redirect('teacher');
@@ -141,7 +141,7 @@ class Teacher extends MY_Controller
             ->num_rows();
 
         if ($username_exists > 0) {
-            $this->session->set_flashdata('errors', array('username' => 'Username sudah digunakan oleh guru lain.'));
+            $this->session->set_flashdata('errors', array('username' => 'Username sudah digunakan oleh akun lain.'));
             redirect('teacher');
             return;
         }
@@ -212,9 +212,9 @@ class Teacher extends MY_Controller
             }
 
             if ($this->m_teacher->update_teacher($id, $payload)) {
-                $this->session->set_flashdata('success', 'Data guru berhasil diperbarui.');
+                $this->session->set_flashdata('success', 'Data akun berhasil diperbarui.');
             } else {
-                $this->session->set_flashdata('errors', array('Gagal memperbarui data guru.'));
+                $this->session->set_flashdata('errors', array('Gagal memperbarui data akun.'));
             }
 
             redirect('teacher');
@@ -252,9 +252,9 @@ class Teacher extends MY_Controller
         }
 
         if ($this->m_teacher->delete_teacher($id)) {
-            $this->session->set_flashdata('success', 'Data guru berhasil dihapus dari sistem.');
+            $this->session->set_flashdata('success', 'Data akun berhasil dihapus dari sistem.');
         } else {
-            $this->session->set_flashdata('errors', array('Gagal menghapus data guru.'));
+            $this->session->set_flashdata('errors', array('Gagal menghapus data akun.'));
         }
 
         redirect('teacher');

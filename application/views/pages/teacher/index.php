@@ -1,10 +1,10 @@
 <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
-        <h2 class="text-4xl font-black text-on-background mb-2">Manajemen Guru</h2>
+        <h2 class="text-4xl font-black text-on-background mb-2">Manajemen Akun</h2>
         <p class="text-outline font-medium text-lg">Kelola hak akses pengguna sistem evaluasi kriteria SAW.</p>
     </div>
     <button onclick="openAddModal()" class="bg-primary text-on-primary font-black text-xs uppercase tracking-widest px-6 py-4 rounded-full shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">person_add</span> Tambah Guru
+        <span class="material-symbols-outlined text-sm">person_add</span> Tambah Akun
     </button>
 </div>
 
@@ -15,7 +15,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-surface-container-low/50">
-                    <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Informasi Guru</th>
+                    <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Informasi Akun</th>
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Username</th>
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Kelas Diajar</th>
                     <th class="p-8 text-[10px] font-black uppercase text-outline tracking-[0.2em] border-b border-outline-variant">Tanggal Terdaftar</th>
@@ -70,7 +70,7 @@
 <div id="teacherModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
     <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border border-outline-variant transform scale-95 transition-all duration-300">
         <div class="flex items-center justify-between mb-6">
-            <h3 id="modalTitle" class="text-2xl font-black text-on-surface tracking-tight">Tambah Guru</h3>
+            <h3 id="modalTitle" class="text-2xl font-black text-on-surface tracking-tight">Tambah Akun</h3>
             <button onclick="closeModal()" class="text-outline hover:bg-gray-100 p-2 rounded-full transition-colors">
                 <span class="material-symbols-outlined">close</span>
             </button>
@@ -160,7 +160,7 @@
     const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
 
     function openAddModal() {
-        modalTitle.textContent = "Tambah Guru Baru";
+        modalTitle.textContent = "Tambah Akun Baru";
         form.action = "<?= base_url('teacher/store') ?>";
         formName.value = "";
         formUsername.value = "";
@@ -174,7 +174,7 @@
     }
 
     function openEditModal(id, name, username, role, class_id) {
-        modalTitle.textContent = "Edit Data Guru";
+        modalTitle.textContent = "Edit Data Akun";
         form.action = "<?= base_url('teacher/update') ?>/" + id;
         formName.value = name;
         formUsername.value = username;
