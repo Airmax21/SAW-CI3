@@ -6,18 +6,36 @@
 
     <form action="" method="GET" class="flex flex-wrap items-center gap-3 bg-surface-container-lowest p-3 rounded-[2rem] shadow-sm border border-outline-variant">
 
-        <div class="flex items-center gap-2 px-4 border-r border-outline-variant">
-            <span class="material-symbols-outlined text-secondary text-sm">group</span>
-            <select name="class_id" class="border-none focus:ring-0 font-bold text-on-surface-variant bg-transparent cursor-pointer text-sm">
-                <option value="" <?= empty($selected_class_id) ? 'selected' : '' ?>>Semua Kelas</option>
+        <?php if ($this->session->userdata('role') === 'admin'): ?>
+            <div class="flex items-center gap-2 px-4 border-r border-outline-variant">
+                <span class="material-symbols-outlined text-secondary text-sm">group</span>
+                <select name="class_id" class="border-none focus:ring-0 font-bold text-on-surface-variant bg-transparent cursor-pointer text-sm">
+                    <option value="" <?= empty($selected_class_id) ? 'selected' : '' ?>>Semua Kelas</option>
 
-                <?php foreach ($classes as $c): ?>
-                    <option value="<?= $c->id ?>" <?= $selected_class_id == $c->id ? 'selected' : '' ?>>
-                        Kelas <?= html_escape($c->class_name) ?> (<?= html_escape($c->academic_year) ?>)
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+                    <?php foreach ($classes as $c): ?>
+                        <option value="<?= $c->id ?>" <?= $selected_class_id == $c->id ? 'selected' : '' ?>>
+                            Kelas <?= html_escape($c->class_name) ?> (<?= html_escape($c->academic_year) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php else: ?>
+            <?php
+            $guru_class_name = '';
+            foreach ($classes as $c) {
+                if ($c->id == $selected_class_id) {
+                    $guru_class_name = $c->class_name . ' (' . $c->academic_year . ')';
+                    break;
+                }
+            }
+            ?>
+            <?php if (!empty($guru_class_name)): ?>
+                <div class="flex items-center gap-2 px-4 border-r border-outline-variant text-sm font-bold text-on-surface-variant">
+                    <span class="material-symbols-outlined text-secondary text-sm">group</span>
+                    <span>Kelas: <?= html_escape($guru_class_name) ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
 
         <div class="flex items-center gap-2 px-4">
             <span class="material-symbols-outlined text-secondary text-sm">calendar_month</span>
@@ -58,7 +76,13 @@
                         <tr>
                             <td colspan="<?= count($criterias) + 1 ?>" class="p-20 text-center">
                                 <span class="material-symbols-outlined text-6xl text-outline-variant mb-4">person_off</span>
-                                <p class="text-outline font-bold">Belum ada data siswa terdaftar.</p>
+                                <p class="text-outline font-bold">
+                                    <?php if ($this->session->userdata('role') === 'guru' && empty($selected_class_id)): ?>
+                                        Anda belum ditugaskan ke kelas manapun. Silakan hubungi Admin.
+                                    <?php else: ?>
+                                        Belum ada data siswa terdaftar.
+                                    <?php endif; ?>
+                                </p>
                             </td>
                         </tr>
                     <?php endif; ?>

@@ -25,11 +25,15 @@ class Dashboard extends MY_Controller
      */
     public function index()
     {
-        // Tangkap parameter filter via GET request dengan XSS filtering bawaan CI3
-        $class_id = $this->input->get('class_id', TRUE);
-
-        // Lakukan sanitasi tipe data (kondisi if inline clean)
-        $class_id = ($class_id !== NULL && $class_id !== '') ? (int) $class_id : NULL;
+        // Tangkap parameter filter berdasarkan role
+        if ($this->session->userdata('role') === 'guru') {
+            $this->load->model('m_teacher');
+            $teacher = $this->m_teacher->get_by_id($this->session->userdata('teacher_id'));
+            $class_id = $teacher ? (int)$teacher->class_id : NULL;
+        } else {
+            $class_id = $this->input->get('class_id', TRUE);
+            $class_id = ($class_id !== NULL && $class_id !== '') ? (int) $class_id : NULL;
+        }
 
         // Eksekusi core logic agregat statistik di level Model (M_dashboard)
         $data = $this->m_dashboard->get_dashboard_data($class_id);

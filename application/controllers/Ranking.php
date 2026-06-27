@@ -34,8 +34,15 @@ class Ranking extends MY_Controller
             $period = date('Y-m');
         }
 
-        $class_id = $this->input->get('class_id', TRUE);
-        $class_id = ($class_id !== NULL && $class_id !== '') ? (int) $class_id : NULL;
+        // Ambil parameter class_id berdasarkan role
+        if ($this->session->userdata('role') === 'guru') {
+            $this->load->model('m_teacher');
+            $teacher = $this->m_teacher->get_by_id($this->session->userdata('teacher_id'));
+            $class_id = $teacher ? (int)$teacher->class_id : NULL;
+        } else {
+            $class_id = $this->input->get('class_id', TRUE);
+            $class_id = ($class_id !== NULL && $class_id !== '') ? (int) $class_id : NULL;
+        }
 
         $data = $this->m_saw->calculate_ranking($period, $class_id);
 
@@ -59,8 +66,15 @@ class Ranking extends MY_Controller
             $period = date('Y-m');
         }
 
-        $class_id = $this->input->get('class_id', TRUE);
-        $class_id = ($class_id !== NULL && $class_id !== '') ? (int) $class_id : NULL;
+        // Ambil parameter class_id berdasarkan role
+        if ($this->session->userdata('role') === 'guru') {
+            $this->load->model('m_teacher');
+            $teacher = $this->m_teacher->get_by_id($this->session->userdata('teacher_id'));
+            $class_id = $teacher ? (int)$teacher->class_id : NULL;
+        } else {
+            $class_id = $this->input->get('class_id', TRUE);
+            $class_id = ($class_id !== NULL && $class_id !== '') ? (int) $class_id : NULL;
+        }
 
         // 1. Ambil data kalkulasi matriks SAW dari model
         $data = $this->m_saw->calculate_ranking($period, $class_id);

@@ -10,20 +10,38 @@
         <!-- Action dikosongkan agar otomatis submit ke URL aktif saat ini -->
         <form action="" method="GET" class="flex items-center gap-2 bg-surface-container-lowest p-1.5 rounded-full shadow-sm border border-outline-variant">
 
-            <!-- Filter Kelas -->
-            <div class="flex items-center gap-1.5 px-3 border-r border-outline-variant">
-                <span class="material-symbols-outlined text-secondary text-sm">group</span>
-                <select name="class_id" class="border-none focus:ring-0 font-bold text-on-surface-variant bg-transparent cursor-pointer text-xs pr-7 py-1">
-                    <!-- Opsi Semua Kelas (Gunakan variabel pembanding dari Controller CI3) -->
-                    <option value="" <?= empty($selected_class_id) ? 'selected' : '' ?>>Semua Kelas</option>
+            <?php if ($this->session->userdata('role') === 'admin'): ?>
+                <!-- Filter Kelas -->
+                <div class="flex items-center gap-1.5 px-3 border-r border-outline-variant">
+                    <span class="material-symbols-outlined text-secondary text-sm">group</span>
+                    <select name="class_id" class="border-none focus:ring-0 font-bold text-on-surface-variant bg-transparent cursor-pointer text-xs pr-7 py-1">
+                        <!-- Opsi Semua Kelas (Gunakan variabel pembanding dari Controller CI3) -->
+                        <option value="" <?= empty($selected_class_id) ? 'selected' : '' ?>>Semua Kelas</option>
 
-                    <?php foreach ($classes as $c): ?>
-                        <option value="<?= $c->id ?>" <?= $selected_class_id == $c->id ? 'selected' : '' ?>>
-                            Kelas <?= html_escape($c->class_name) ?> (<?= html_escape($c->academic_year) ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+                        <?php foreach ($classes as $c): ?>
+                            <option value="<?= $c->id ?>" <?= $selected_class_id == $c->id ? 'selected' : '' ?>>
+                                Kelas <?= html_escape($c->class_name) ?> (<?= html_escape($c->academic_year) ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php else: ?>
+                <?php
+                $guru_class_name = '';
+                foreach ($classes as $c) {
+                    if ($c->id == $selected_class_id) {
+                        $guru_class_name = $c->class_name . ' (' . $c->academic_year . ')';
+                        break;
+                    }
+                }
+                ?>
+                <?php if (!empty($guru_class_name)): ?>
+                    <div class="flex items-center gap-1.5 px-3 border-r border-outline-variant text-xs font-bold text-on-surface-variant">
+                        <span class="material-symbols-outlined text-secondary text-sm">group</span>
+                        <span>Kelas: <?= html_escape($guru_class_name) ?></span>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
 
             <!-- Filter Tanggal -->
             <div class="flex items-center gap-1.5 px-2 relative min-w-0">
@@ -125,7 +143,11 @@
                     <?php if (empty($ranking)): ?>
                         <tr>
                             <td colspan="5" class="p-12 text-center text-on-surface-variant font-medium">
-                                Tidak ada data peringkat pada periode atau kelas ini.
+                                <?php if ($this->session->userdata('role') === 'guru' && empty($selected_class_id)): ?>
+                                    Anda belum ditugaskan ke kelas manapun. Silakan hubungi Admin.
+                                <?php else: ?>
+                                    Tidak ada data peringkat pada periode atau kelas ini.
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php else: ?>

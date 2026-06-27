@@ -11,6 +11,13 @@ class Student extends MY_Controller
     {
         parent::__construct();
 
+        // Hak akses: Hanya Admin yang bisa mengelola data siswa
+        if ($this->session->userdata('role') !== 'admin') {
+            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses ke halaman manajemen siswa.'));
+            redirect('dashboard');
+            return;
+        }
+
         // Memuat model data yang dibutuhkan
         $this->load->model('m_student');
         $this->load->model('m_class');

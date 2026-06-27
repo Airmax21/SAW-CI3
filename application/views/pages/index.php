@@ -32,7 +32,7 @@ if (!function_exists('translateMonth')) {
         <h2 class="text-4xl font-headline font-bold text-on-background mb-2">
             Selamat Datang, <?= html_escape($this->session->userdata('teacher_name') ? $this->session->userdata('teacher_name') : 'Guru') ?>!
         </h2>
-        <p class="text-on-surface-variant font-medium text-lg">Berikut ringkasan perkembangan dan status penilaian anak-anak PAUD Mekar Sari.</p>
+        <p class="text-on-surface-variant font-medium text-lg">Berikut ringkasan perkembangan dan status penilaian anak-anak PAUD Mekar Sari Adong 1.</p>
     </div>
 
     <!-- Filter Pencarian Cepat Nama Siswa di Beranda (Arahkan ke controller student CI3) -->
@@ -94,25 +94,46 @@ if (!function_exists('translateMonth')) {
         </h3>
 
         <!-- Filter Tab Kelas Aktif (Arahkan ke Dashboard Controller CI3) -->
-        <div class="flex flex-wrap gap-1.5 bg-surface-container-high p-1 rounded-full border border-outline-variant">
-            <a href="<?= base_url('dashboard') ?>"
-                class="px-4 py-1.5 text-xs font-black rounded-full transition-all <?= ($selected_class_id === null) ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:bg-surface' ?>">
-                Semua Kelas
-            </a>
-            <?php foreach ($classes as $class): ?>
-                <a href="<?= base_url('dashboard?class_id=' . $class->id) ?>"
-                    class="px-4 py-1.5 text-xs font-black rounded-full transition-all <?= ($selected_class_id === (int)$class->id) ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:bg-surface' ?>">
-                    Kelas <?= html_escape($class->class_name) ?>
+        <?php if ($this->session->userdata('role') === 'admin'): ?>
+            <div class="flex flex-wrap gap-1.5 bg-surface-container-high p-1 rounded-full border border-outline-variant">
+                <a href="<?= base_url('dashboard') ?>"
+                    class="px-4 py-1.5 text-xs font-black rounded-full transition-all <?= ($selected_class_id === null) ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:bg-surface' ?>">
+                    Semua Kelas
                 </a>
-            <?php endforeach; ?>
-        </div>
+                <?php foreach ($classes as $class): ?>
+                    <a href="<?= base_url('dashboard?class_id=' . $class->id) ?>"
+                        class="px-4 py-1.5 text-xs font-black rounded-full transition-all <?= ($selected_class_id === (int)$class->id) ? 'bg-primary text-white shadow-sm' : 'text-on-surface-variant hover:bg-surface' ?>">
+                        Kelas <?= html_escape($class->class_name) ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <?php
+            $guru_class_name = '';
+            foreach ($classes as $class) {
+                if ((int)$class->id === $selected_class_id) {
+                    $guru_class_name = $class->class_name;
+                    break;
+                }
+            }
+            ?>
+            <?php if (!empty($guru_class_name)): ?>
+                <span class="px-4 py-1.5 bg-primary-container text-primary text-xs font-black rounded-full">
+                    Kelas <?= html_escape($guru_class_name) ?>
+                </span>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <!-- List Grid Data Asli -->
     <div class="p-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <?php if (empty($students)): ?>
             <div class="col-span-1 md:col-span-2 xl:col-span-3 p-12 text-center text-on-surface-variant font-medium">
-                Belum ada data siswa terdaftar di kelas ini.
+                <?php if ($this->session->userdata('role') === 'guru' && empty($selected_class_id)): ?>
+                    Anda belum ditugaskan ke kelas manapun. Silakan hubungi Admin.
+                <?php else: ?>
+                    Belum ada data siswa terdaftar di kelas ini.
+                <?php endif; ?>
             </div>
         <?php else: ?>
             <?php foreach ($students as $student): ?>

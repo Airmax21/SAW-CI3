@@ -12,6 +12,13 @@ class ClassController extends MY_Controller
         // Menjalankan constructor induk (MY_Controller) untuk cek session
         parent::__construct();
 
+        // Hak akses: Hanya Admin yang bisa mengelola data kelas
+        if ($this->session->userdata('role') !== 'admin') {
+            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses ke halaman manajemen kelas.'));
+            redirect('dashboard');
+            return;
+        }
+
         // Memuat model kelas tunggal hasil rangkuman services
         $this->load->model('m_class');
 

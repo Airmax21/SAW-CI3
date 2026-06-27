@@ -50,9 +50,14 @@ class M_teacher extends CI_Model
             'username'   => isset($data['username']) ? $data['username'] : $teacher->username,
             'name'       => isset($data['name']) ? $data['name'] : $teacher->name,
             'role'       => isset($data['role']) ? $data['role'] : $teacher->role,
-            'class_id'   => (isset($data['role']) && $data['role'] === 'guru') ? (!empty($data['class_id']) ? (int)$data['class_id'] : null) : null,
             'updated_at' => date('Y-m-d H:i:s')
         );
+
+        if (isset($data['role'])) {
+            $payload['class_id'] = ($data['role'] === 'guru' && !empty($data['class_id'])) ? (int)$data['class_id'] : null;
+        } else {
+            $payload['class_id'] = isset($data['class_id']) ? ((int)$data['class_id'] ?: null) : $teacher->class_id;
+        }
 
         if (!empty($data['password'])) {
             $payload['password'] = password_hash($data['password'], PASSWORD_BCRYPT);

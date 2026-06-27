@@ -83,7 +83,7 @@
 
     <div class="header">
         <h2>Laporan Hasil Akhir Perangkingan Siswa</h2>
-        <p>PAUD Mekar Sari - Metode Simple Additive Weighting (SAW)</p>
+        <p>PAUD Mekar Sari Adong 1 - Metode Simple Additive Weighting (SAW)</p>
     </div>
 
     <table class="meta">

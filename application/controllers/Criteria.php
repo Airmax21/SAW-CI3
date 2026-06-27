@@ -12,6 +12,13 @@ class Criteria extends MY_Controller
         // Menjalankan konstruktor induk untuk validasi session
         parent::__construct();
 
+        // Hak akses: Hanya Admin yang bisa mengelola data kriteria
+        if ($this->session->userdata('role') !== 'admin') {
+            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses ke halaman manajemen kriteria.'));
+            redirect('dashboard');
+            return;
+        }
+
         // Memuat model kriteria tunggal hasil rangkuman services
         $this->load->model('m_criteria');
 
