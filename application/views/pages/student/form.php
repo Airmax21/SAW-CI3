@@ -6,6 +6,11 @@ $fieldErrors = $this->session->flashdata('errors');
 $val_full_name = isset($old_input['full_name']) ? $old_input['full_name'] : (isset($student->full_name) ? $student->full_name : '');
 $val_gender    = isset($old_input['gender']) ? $old_input['gender'] : (isset($student->gender) ? $student->gender : '');
 $val_class_id  = isset($old_input['class_id']) ? $old_input['class_id'] : (isset($student->class_id) ? $student->class_id : '');
+$val_nisn      = isset($old_input['nisn']) ? $old_input['nisn'] : (isset($student->nisn) ? $student->nisn : '');
+$val_religion  = isset($old_input['religion']) ? $old_input['religion'] : (isset($student->religion) ? $student->religion : '');
+$val_address   = isset($old_input['address']) ? $old_input['address'] : (isset($student->address) ? $student->address : '');
+$val_parent_name    = isset($old_input['parent_name']) ? $old_input['parent_name'] : (isset($student->parent_name) ? $student->parent_name : '');
+$val_parent_contact = isset($old_input['parent_contact']) ? $old_input['parent_contact'] : (isset($student->parent_contact) ? $student->parent_contact : '');
 ?>
 
 <div class="max-w-3xl mx-auto pb-20">
@@ -15,7 +20,7 @@ $val_class_id  = isset($old_input['class_id']) ? $old_input['class_id'] : (isset
         </a>
         <div>
             <h2 class="text-4xl font-bold text-gray-900 tracking-tight"><?= html_escape($title) ?></h2>
-            <p class="text-gray-500 font-medium mt-1">Lengkapi informasi biodata anak didik dengan benar.</p>
+            <p class="text-gray-500 font-medium mt-1">Lengkapi informasi biodata anak dengan benar.</p>
         </div>
     </div>
 
@@ -24,11 +29,12 @@ $val_class_id  = isset($old_input['class_id']) ? $old_input['class_id'] : (isset
     <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
         <form action="<?= $action ?>" method="POST">
             <div class="space-y-8">
+                <!-- Nama Lengkap Anak -->
                 <div class="group">
-                    <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Nama Lengkap Siswa</label>
+                    <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Nama Lengkap Anak</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 transition-colors <?= isset($fieldErrors['full_name']) ? 'text-red-500' : 'text-gray-400 group-focus-within:text-primary' ?>">person</span>
-                        <input type="text" name="full_name"
+                        <input type="text" name="full_name" required
                             class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-2 transition-all outline-none <?= isset($fieldErrors['full_name']) ? 'border-red-200 bg-red-50 focus:border-red-400' : 'border-transparent focus:border-primary focus:bg-white' ?>"
                             placeholder="Masukkan nama lengkap anak..."
                             value="<?= html_escape($val_full_name) ?>">
@@ -41,6 +47,7 @@ $val_class_id  = isset($old_input['class_id']) ? $old_input['class_id'] : (isset
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Jenis Kelamin -->
                     <div>
                         <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Jenis Kelamin</label>
                         <div class="flex gap-4">
@@ -62,11 +69,12 @@ $val_class_id  = isset($old_input['class_id']) ? $old_input['class_id'] : (isset
                         <?php endif; ?>
                     </div>
 
+                    <!-- Kelas -->
                     <div class="group">
                         <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Kelas PAUD</label>
                         <div class="relative">
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 <?= isset($fieldErrors['class_id']) ? 'text-red-500' : 'text-gray-400 group-focus-within:text-primary' ?>">school</span>
-                            <select name="class_id" class="w-full pl-12 pr-10 py-4 bg-gray-50 rounded-2xl border-2 outline-none transition-all appearance-none <?= isset($fieldErrors['class_id']) ? 'border-red-200 bg-red-50 focus:border-red-400' : 'border-transparent focus:border-primary focus:bg-white' ?>">
+                            <select name="class_id" required class="w-full pl-12 pr-10 py-4 bg-gray-50 rounded-2xl border-2 outline-none transition-all appearance-none <?= isset($fieldErrors['class_id']) ? 'border-red-200 bg-red-50 focus:border-red-400' : 'border-transparent focus:border-primary focus:bg-white' ?>">
                                 <option value="">Pilih Kelas</option>
                                 <?php foreach ($classes as $class): ?>
                                     <option value="<?= $class->id ?>" <?= $val_class_id == $class->id ? 'selected' : '' ?>>
@@ -79,6 +87,69 @@ $val_class_id  = isset($old_input['class_id']) ? $old_input['class_id'] : (isset
                         <?php if (isset($fieldErrors['class_id'])) : ?>
                             <p class="text-red-600 text-xs mt-2 font-bold ml-1"><?= html_escape($fieldErrors['class_id']) ?></p>
                         <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- NISN -->
+                    <div class="group">
+                        <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">NISN</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">pin</span>
+                            <input type="text" name="nisn"
+                                class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                                placeholder="Masukkan NISN anak (opsional)..."
+                                value="<?= html_escape($val_nisn) ?>">
+                        </div>
+                    </div>
+
+                    <!-- Agama -->
+                    <div class="group">
+                        <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Agama</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">church</span>
+                            <input type="text" name="religion"
+                                class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                                placeholder="Masukkan agama anak..."
+                                value="<?= html_escape($val_religion) ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alamat -->
+                <div class="group">
+                    <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Alamat</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-6 text-gray-400 group-focus-within:text-primary">home</span>
+                        <textarea name="address" rows="3"
+                            class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                            placeholder="Masukkan alamat tinggal anak..."><?= html_escape($val_address) ?></textarea>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Nama Orang Tua -->
+                    <div class="group">
+                        <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Nama Orang Tua</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">family_restroom</span>
+                            <input type="text" name="parent_name"
+                                class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                                placeholder="Nama ibu atau ayah..."
+                                value="<?= html_escape($val_parent_name) ?>">
+                        </div>
+                    </div>
+
+                    <!-- Kontak Orang Tua -->
+                    <div class="group">
+                        <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-3 ml-1">Kontak Orang Tua</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">call</span>
+                            <input type="text" name="parent_contact"
+                                class="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-2 border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                                placeholder="Nomor HP/WhatsApp orang tua..."
+                                value="<?= html_escape($val_parent_contact) ?>">
+                        </div>
                     </div>
                 </div>
 

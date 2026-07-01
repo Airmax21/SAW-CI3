@@ -54,11 +54,16 @@ class M_student extends CI_Model
     public function create($data)
     {
         $payload = array(
-            'class_id'   => isset($data['class_id']) ? (int)$data['class_id'] : null,
-            'full_name'  => isset($data['full_name']) ? $data['full_name'] : null,
-            'gender'     => isset($data['gender']) ? $data['gender'] : null,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
+            'class_id'       => isset($data['class_id']) ? (int)$data['class_id'] : null,
+            'full_name'      => isset($data['full_name']) ? $data['full_name'] : null,
+            'gender'         => isset($data['gender']) ? $data['gender'] : null,
+            'nisn'           => isset($data['nisn']) ? $data['nisn'] : null,
+            'religion'       => isset($data['religion']) ? $data['religion'] : null,
+            'address'        => isset($data['address']) ? $data['address'] : null,
+            'parent_name'    => isset($data['parent_name']) ? $data['parent_name'] : null,
+            'parent_contact' => isset($data['parent_contact']) ? $data['parent_contact'] : null,
+            'created_at'     => date('Y-m-d H:i:s'),
+            'updated_at'     => date('Y-m-d H:i:s')
         );
 
         return $this->db->insert($this->table, $payload);
@@ -79,6 +84,11 @@ class M_student extends CI_Model
         if (isset($data['class_id']))  $payload['class_id']  = (int)$data['class_id'];
         if (isset($data['full_name'])) $payload['full_name'] = $data['full_name'];
         if (isset($data['gender']))    $payload['gender']    = $data['gender'];
+        if (isset($data['nisn']))      $payload['nisn']      = $data['nisn'];
+        if (isset($data['religion']))  $payload['religion']  = $data['religion'];
+        if (isset($data['address']))   $payload['address']   = $data['address'];
+        if (isset($data['parent_name']))    $payload['parent_name']    = $data['parent_name'];
+        if (isset($data['parent_contact'])) $payload['parent_contact'] = $data['parent_contact'];
 
         $payload['updated_at'] = date('Y-m-d H:i:s');
 

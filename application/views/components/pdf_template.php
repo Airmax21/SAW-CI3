@@ -82,7 +82,7 @@
 <body>
 
     <div class="header">
-        <h2>Laporan Hasil Akhir Perangkingan Siswa</h2>
+        <h2>Laporan Hasil Akhir Perangkingan Anak</h2>
         <p>PAUD Mekar Sari Adong 1 - Metode Simple Additive Weighting (SAW)</p>
     </div>
 
@@ -101,7 +101,7 @@
         <thead>
             <tr>
                 <th width="35" class="text-center">Rank</th>
-                <th>Nama Anak Didik</th>
+                <th>Nama Anak</th>
                 <?php foreach ($criterias as $crit): ?>
                     <th class="text-center" width="50"><?= html_escape($crit->code) ?></th>
                 <?php endforeach; ?>

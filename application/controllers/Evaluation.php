@@ -51,7 +51,7 @@ class Evaluation extends MY_Controller
         $data['selected_period'] = $period;
 
         // Metadata judul halaman untuk di-render di file header
-        $data['title'] = 'Penilaian Siswa';
+        $data['title'] = 'Penilaian Anak';
 
         // Render halaman menggunakan tumpukan Cara 1 (Header -> Konten -> Footer)
         $this->load->view('layouts/header', $data);
@@ -60,53 +60,88 @@ class Evaluation extends MY_Controller
     }
 
     /**
-     * Memproses penyimpanan / pembaruan nilai massal siswa (Bulk Upsert)
+     * Memproses penyimpanan / pembaruan nilai massal siswa (Bulk/Single Row AJAX)
      * Menggantikan fungsionalitas CreateBulkEvaluationService
      */
     public function store()
     {
-        // Mengambil seluruh data input POST secara murni
-        $post_data = $this->input->post(NULL, TRUE);
+        // Proteksi Hak Akses: Hanya Guru yang diperbolehkan menginput/mengubah nilai
+        if ($this->session->userdata('role') !== 'guru') {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => 'Anda tidak memiliki akses untuk menyimpan penilaian. Hanya Guru yang dapat menginput nilai.'));
+                return;
+            }
+            $this->session->set_flashdata('errors', array('Anda tidak memiliki akses untuk menyimpan penilaian. Hanya Guru yang dapat menginput nilai.'));
+            redirect($_SERVER['HTTP_REFERER']);
+            return;
+        }
+
+        // Mendukung request AJAX (JSON raw input) atau POST form biasa
+        $post_data = array();
+        if ($this->input->is_ajax_request()) {
+            $post_data = json_decode($this->input->raw_input_stream, TRUE);
+        }
+        if (empty($post_data)) {
+            $post_data = $this->input->post(NULL, TRUE);
+        }
 
         if (empty($post_data)) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => 'Tidak ada data penilaian yang dikirim.'));
+                return;
+            }
             $this->session->set_flashdata('errors', array('Tidak ada data penilaian yang dikirim.'));
             redirect($_SERVER['HTTP_REFERER']);
             return;
         }
 
-        // Cek jika guru, apakah data penilaian yang dikirim adalah untuk siswa di kelasnya saja
-        if ($this->session->userdata('role') === 'guru') {
-            $this->load->model('m_teacher');
-            $teacher = $this->m_teacher->get_by_id($this->session->userdata('teacher_id'));
-            $class_id = $teacher ? (int)$teacher->class_id : NULL;
+        // Cek kelas guru
+        $this->load->model('m_teacher');
+        $teacher = $this->m_teacher->get_by_id($this->session->userdata('teacher_id'));
+        $class_id = $teacher ? (int)$teacher->class_id : NULL;
 
-            if (empty($class_id)) {
-                $this->session->set_flashdata('errors', array('Anda belum ditugaskan ke kelas manapun.'));
-                redirect($_SERVER['HTTP_REFERER']);
+        if (empty($class_id)) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => 'Anda belum ditugaskan ke kelas manapun.'));
                 return;
             }
+            $this->session->set_flashdata('errors', array('Anda belum ditugaskan ke kelas manapun.'));
+            redirect($_SERVER['HTTP_REFERER']);
+            return;
+        }
 
-            // Validasi apakah siswa yang di-update berada di kelas guru ini
-            if (!empty($post_data['scores']) && is_array($post_data['scores'])) {
-                $student_ids = array_keys($post_data['scores']);
-                if (!empty($student_ids)) {
-                    $invalid_students = $this->db->where_in('id', $student_ids)
-                        ->where('class_id !=', $class_id)
-                        ->get('students')
-                        ->num_rows();
-                    if ($invalid_students > 0) {
-                        $this->session->set_flashdata('errors', array('Anda hanya dapat menilai siswa di kelas Anda sendiri.'));
-                        redirect($_SERVER['HTTP_REFERER']);
+        // Validasi apakah siswa yang di-update berada di kelas guru ini
+        if (!empty($post_data['scores']) && is_array($post_data['scores'])) {
+            $student_ids = array_keys($post_data['scores']);
+            if (!empty($student_ids)) {
+                $invalid_students = $this->db->where_in('id', $student_ids)
+                    ->where('class_id !=', $class_id)
+                    ->get('students')
+                    ->num_rows();
+                if ($invalid_students > 0) {
+                    if ($this->input->is_ajax_request()) {
+                        echo json_encode(array('status' => 'error', 'message' => 'Anda hanya dapat menilai anak di kelas Anda sendiri.'));
                         return;
                     }
+                    $this->session->set_flashdata('errors', array('Anda hanya dapat menilai anak di kelas Anda sendiri.'));
+                    redirect($_SERVER['HTTP_REFERER']);
+                    return;
                 }
             }
         }
 
         // Eksekusi proses penyimpanan massal berbasis transaksi database di level Model
         if ($this->m_evaluation->save_bulk_evaluation($post_data)) {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'success', 'message' => 'Penilaian berhasil disimpan.'));
+                return;
+            }
             $this->session->set_flashdata('success', 'Penilaian berhasil disimpan.');
         } else {
+            if ($this->input->is_ajax_request()) {
+                echo json_encode(array('status' => 'error', 'message' => 'Gagal menyimpan penilaian.'));
+                return;
+            }
             $this->session->set_flashdata('errors', array('Gagal menyimpan penilaian.'));
         }
 

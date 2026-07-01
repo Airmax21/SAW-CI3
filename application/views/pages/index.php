@@ -30,7 +30,7 @@ if (!function_exists('translateMonth')) {
     <div>
         <!-- Memanggil nama guru secara dinamis menggunakan objek session CI3 -->
         <h2 class="text-4xl font-headline font-bold text-on-background mb-2">
-            Selamat Datang, <?= html_escape($this->session->userdata('teacher_name') ? $this->session->userdata('teacher_name') : 'Guru') ?>!
+            Selamat Datang, <?= html_escape($this->session->userdata('teacher_name') ? $this->session->userdata('teacher_name') : ($this->session->userdata('role') === 'admin' ? 'Admin' : 'Guru PAUD')) ?>!
         </h2>
         <p class="text-on-surface-variant font-medium text-lg">Berikut ringkasan perkembangan dan status penilaian anak-anak PAUD Mekar Sari Adong 1.</p>
     </div>
@@ -39,7 +39,7 @@ if (!function_exists('translateMonth')) {
     <div class="flex items-center gap-4 w-full md:w-auto">
         <form action="<?= base_url('student') ?>" method="GET" class="relative w-full md:w-64">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-            <input name="search" class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-on-surface shadow-sm text-sm" placeholder="Cari nama siswa..." type="text" />
+            <input name="search" class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-full border-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-on-surface shadow-sm text-sm" placeholder="Cari nama anak..." type="text" />
         </form>
     </div>
 </div>
@@ -51,7 +51,7 @@ if (!function_exists('translateMonth')) {
             <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">groups</span>
         </div>
         <div>
-            <p class="text-on-surface-variant text-sm font-bold mb-1">Total Siswa</p>
+            <p class="text-on-surface-variant text-sm font-bold mb-1">Total Anak</p>
             <p class="text-3xl font-headline font-bold text-on-background"><?= $totalStudents ?></p>
         </div>
     </div>
@@ -132,7 +132,7 @@ if (!function_exists('translateMonth')) {
                 <?php if ($this->session->userdata('role') === 'guru' && empty($selected_class_id)): ?>
                     Anda belum ditugaskan ke kelas manapun. Silakan hubungi Admin.
                 <?php else: ?>
-                    Belum ada data siswa terdaftar di kelas ini.
+                    Belum ada data anak terdaftar di kelas ini.
                 <?php endif; ?>
             </div>
         <?php else: ?>
@@ -183,7 +183,7 @@ if (!function_exists('translateMonth')) {
     <!-- Footer CTA Menu Utama -->
     <div class="p-4 border-t border-surface-dim bg-surface-container-low/30 text-center">
         <a href="<?= base_url('student') ?>" class="text-primary font-bold hover:text-primary-container transition-colors inline-flex items-center gap-2 text-sm decoration-none">
-            Ke Manajemen Data Siswa Lengkap
+            Ke Manajemen Data Anak
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </a>
     </div>

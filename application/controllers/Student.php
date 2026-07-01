@@ -27,7 +27,7 @@ class Student extends MY_Controller
     }
 
     /**
-     * Menampilkan halaman daftar manajemen siswa dengan filter kelas
+     * Menampilkan halaman daftar manajemen anak didik dengan filter kelas
      * Menggantikan GetAllStudentsService
      */
     public function index()
@@ -37,7 +37,7 @@ class Student extends MY_Controller
         $selected_class = ($selected_class !== NULL && $selected_class !== '') ? (int)$selected_class : NULL;
 
         $data = array(
-            'title'         => 'Manajemen Siswa',
+            'title'         => 'Manajemen Anak',
             'students'      => $this->m_student->get_all($selected_class),
             'classes'       => $this->m_class->get_all(),
             'selectedClass' => $selected_class
@@ -50,20 +50,25 @@ class Student extends MY_Controller
     }
 
     /**
-     * Menampilkan halaman formulir tambah siswa baru
+     * Menampilkan halaman formulir tambah anak didik baru
      */
     public function create()
     {
         // Di CI3, kita gunakan standard array kosong sebagai representasi objek Entity baru
         $student_empty = (object) array(
-            'id'        => '',
-            'full_name' => '',
-            'gender'    => '',
-            'class_id'  => ''
+            'id'             => '',
+            'full_name'      => '',
+            'gender'         => '',
+            'class_id'       => '',
+            'nisn'           => '',
+            'religion'       => '',
+            'address'        => '',
+            'parent_name'    => '',
+            'parent_contact' => ''
         );
 
         $data = array(
-            'title'   => 'Tambah Siswa Baru',
+            'title'   => 'Tambah Anak Baru',
             'student' => $student_empty,
             'classes' => $this->m_class->get_all(),
             'action'  => base_url('student/store')
@@ -75,7 +80,7 @@ class Student extends MY_Controller
     }
 
     /**
-     * Memproses penyimpanan data siswa baru ke database
+     * Memproses penyimpanan data anak didik baru ke database
      * Menggantikan CreateStudentsService
      */
     public function store()
@@ -92,15 +97,20 @@ class Student extends MY_Controller
             redirect('student/create');
         } else {
             $payload = array(
-                'full_name' => $this->input->post('full_name', TRUE),
-                'gender'    => $this->input->post('gender', TRUE),
-                'class_id'  => (int) $this->input->post('class_id', TRUE)
+                'full_name'      => $this->input->post('full_name', TRUE),
+                'gender'         => $this->input->post('gender', TRUE),
+                'class_id'       => (int) $this->input->post('class_id', TRUE),
+                'nisn'           => $this->input->post('nisn', TRUE),
+                'religion'       => $this->input->post('religion', TRUE),
+                'address'        => $this->input->post('address', TRUE),
+                'parent_name'    => $this->input->post('parent_name', TRUE),
+                'parent_contact' => $this->input->post('parent_contact', TRUE)
             );
 
             if ($this->m_student->create($payload)) {
-                $this->session->set_flashdata('success', 'Data siswa berhasil ditambahkan.');
+                $this->session->set_flashdata('success', 'Data anak berhasil ditambahkan.');
             } else {
-                $this->session->set_flashdata('errors', array('Gagal menambahkan data siswa.'));
+                $this->session->set_flashdata('errors', array('Gagal menambahkan data anak.'));
             }
 
             redirect('student');
@@ -108,7 +118,7 @@ class Student extends MY_Controller
     }
 
     /**
-     * Menampilkan halaman formulir edit data siswa berdasarkan ID
+     * Menampilkan halaman formulir edit data anak didik berdasarkan ID
      * Menggantikan GetByIdStudentsService
      * @param int $id
      */
@@ -124,7 +134,7 @@ class Student extends MY_Controller
         }
 
         $data = array(
-            'title'   => 'Edit Data Siswa',
+            'title'   => 'Edit Data Anak',
             'student' => $student,
             'classes' => $this->m_class->get_all(),
             'action'  => base_url('student/update/' . $id)
@@ -136,7 +146,7 @@ class Student extends MY_Controller
     }
 
     /**
-     * Memproses pembaruan data biodata siswa
+     * Memproses pembaruan data biodata anak didik
      * Menggantikan UpdateStudentsService
      * @param int $id
      */
@@ -150,15 +160,20 @@ class Student extends MY_Controller
             redirect('student/edit/' . $id);
         } else {
             $payload = array(
-                'full_name' => $this->input->post('full_name', TRUE),
-                'gender'    => $this->input->post('gender', TRUE),
-                'class_id'  => (int) $this->input->post('class_id', TRUE)
+                'full_name'      => $this->input->post('full_name', TRUE),
+                'gender'         => $this->input->post('gender', TRUE),
+                'class_id'       => (int) $this->input->post('class_id', TRUE),
+                'nisn'           => $this->input->post('nisn', TRUE),
+                'religion'       => $this->input->post('religion', TRUE),
+                'address'        => $this->input->post('address', TRUE),
+                'parent_name'    => $this->input->post('parent_name', TRUE),
+                'parent_contact' => $this->input->post('parent_contact', TRUE)
             );
 
             if ($this->m_student->update_student($id, $payload)) {
-                $this->session->set_flashdata('success', 'Data siswa berhasil diperbarui.');
+                $this->session->set_flashdata('success', 'Data anak berhasil diperbarui.');
             } else {
-                $this->session->set_flashdata('errors', array('Gagal memperbarui data siswa.'));
+                $this->session->set_flashdata('errors', array('Gagal memperbarui data anak.'));
             }
 
             redirect('student');
@@ -166,7 +181,7 @@ class Student extends MY_Controller
     }
 
     /**
-     * Menghapus data siswa dari database SQLite3
+     * Menghapus data anak didik dari database SQLite3
      * Menggantikan DeleteStudentsService
      * @param int $id
      */
@@ -175,9 +190,9 @@ class Student extends MY_Controller
         $id = (int) $id;
 
         if ($this->m_student->delete_student($id)) {
-            $this->session->set_flashdata('success', 'Data siswa berhasil dihapus.');
+            $this->session->set_flashdata('success', 'Data anak berhasil dihapus.');
         } else {
-            $this->session->set_flashdata('errors', array('Gagal menghapus data siswa.'));
+            $this->session->set_flashdata('errors', array('Gagal menghapus data anak.'));
         }
 
         redirect('student');
@@ -191,7 +206,7 @@ class Student extends MY_Controller
         $rules = array(
             array(
                 'field'  => 'full_name',
-                'label'  => 'Nama Lengkap',
+                'label'  => 'Nama Lengkap Anak',
                 'rules'  => 'required|min_length[3]',
                 'errors' => array(
                     'required'   => '%s wajib diisi.',
@@ -214,6 +229,31 @@ class Student extends MY_Controller
                 'errors' => array(
                     'required' => '%s wajib ditentukan.'
                 )
+            ),
+            array(
+                'field'  => 'nisn',
+                'label'  => 'NISN',
+                'rules'  => 'trim'
+            ),
+            array(
+                'field'  => 'religion',
+                'label'  => 'Agama',
+                'rules'  => 'trim'
+            ),
+            array(
+                'field'  => 'address',
+                'label'  => 'Alamat',
+                'rules'  => 'trim'
+            ),
+            array(
+                'field'  => 'parent_name',
+                'label'  => 'Nama Orang Tua',
+                'rules'  => 'trim'
+            ),
+            array(
+                'field'  => 'parent_contact',
+                'label'  => 'Kontak Orang Tua',
+                'rules'  => 'trim'
             )
         );
 

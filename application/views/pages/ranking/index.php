@@ -133,7 +133,7 @@
                 <thead>
                     <tr class="bg-surface-container-low text-on-surface-variant text-sm font-bold uppercase tracking-wider">
                         <th class="p-4 rounded-tl-lg">Rank</th>
-                        <th class="p-4">Nama Siswa</th>
+                        <th class="p-4">Nama Lengkap Anak</th>
                         <th class="p-4">Skor Total</th>
                         <th class="p-4 text-center">Status</th>
                         <th class="p-4 text-right rounded-tr-lg">Aksi</th>
